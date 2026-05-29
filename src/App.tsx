@@ -17,8 +17,8 @@ function ConfigNeeded() {
           <code>openid profile public_api:read</code>.
         </li>
         <li>
-          Copy the generated <code>client_id</code> into{" "}
-          <code>.env</code> as <code>VITE_CLIENT_ID</code>.
+          Copy the generated <code>client_id</code> into <code>.env</code> as{" "}
+          <code>VITE_CLIENT_ID</code>.
         </li>
         <li>Restart the dev server.</li>
       </ol>
@@ -119,6 +119,7 @@ function Home({ client }: { client: BajaClient }) {
 
 export default function App() {
   if (!isConfigured || !baja) return <ConfigNeeded />;
-  if (window.location.pathname === "/callback") return <Callback client={baja} />;
+  if (window.location.pathname === "/callback")
+    return <Callback client={baja} />;
   return <Home client={baja} />;
 }
