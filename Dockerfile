@@ -1,24 +1,17 @@
-# syntax=docker/dockerfile:1
-
-# ---- Build stage: compile the Vite SPA into static assets ----
 FROM node:22-alpine AS build
-WORKDIR /app
-
-# pnpm via corepack (repo uses pnpm-lock.yaml).
-RUN corepack enable
-
-# Install deps first for better layer caching.
-COPY package.json pnpm-lock.yaml ./
-RUN pnpm install --frozen-lockfile
-
-# Copy the rest (including .env, which Vite reads to inline VITE_* at build time)
-# and produce dist/.
+WORKDIR /usr/src/app
+COPY package*.json ./
+ARG GIT_COMMIT
+ENV GIT_COMMIT=$GIT_COMMIT
+RUN npm install 
 COPY . .
-RUN pnpm build
+RUN npm run build
 
-# ---- Serve stage: nginx serving the static bundle with SPA fallback ----
-FROM nginx:1.27-alpine AS serve
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-COPY --from=build /app/dist /usr/share/nginx/html
-EXPOSE 5180
-CMD ["nginx", "-g", "daemon off;"]
+FROM node:22-alpine
+WORKDIR /usr/src/app 
+RUN npm i -g serve
+COPY --from=build /usr/src/app/dist ./dist
+COPY --from=build /usr/src/app/node_modules ./node_modules
+COPY --from=build /usr/src/app/.env ./.env
+EXPOSE 5173
+CMD [ "serve", "-l", "5173", "-s", "dist" ]

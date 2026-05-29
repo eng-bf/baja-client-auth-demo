@@ -1,0 +1,14 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        GIT_COMMIT: ${GIT_COMMIT:-dev}
+    container_name: baja-client-auth-demo
+    ports:
+      - "5180:5180"
+    environment:
+      - NODE_ENV=production
+      - TZ=America/Tijuana
+    restart: unless-stopped
