@@ -42,3 +42,40 @@ developers.
 - `src/useAuth.ts` — a tiny React hook mirroring the SDK's auth state (the SDK
   itself is framework-agnostic).
 - `src/App.tsx` — home screen + the `/callback` handler.
+
+## Consuming the published SDK (staging / production)
+
+Locally the demo links the SDK from source via `"baja-client": "file:../baja-client"`.
+To run it as a real consumer (installing `baja-client` from the registry),
+change **one line** in `package.json` — the import paths stay identical because
+the package name is the same:
+
+```diff
+- "baja-client": "file:../baja-client",
++ "baja-client": "^0.1.0",
+```
+
+Then `npm install` pulls it from the registry. To verify the published artifact
+**before** publishing, install the packed tarball instead:
+
+```bash
+pnpm -C ../baja-client pack            # → baja-client-0.1.0.tgz
+npm install ../baja-client/baja-client-0.1.0.tgz
+```
+
+### Staging config
+
+1. Register a **public** client in the staging dashboard with redirect URI =
+   your deployed demo URL + `/callback` (e.g. `https://demo.staging.example.com/callback`).
+2. Point `.env` at staging:
+   ```
+   VITE_BF_API_URL=https://api.staging.bajafulfillment.com
+   VITE_CLIENT_ID=app_…
+   VITE_REDIRECT_URI=https://demo.staging.example.com/callback
+   VITE_SCOPES=openid profile public_api:read
+   ```
+3. `pnpm build` → deploy the static `dist/` to any host. CORS is already open
+   for `/oauth/token` + `/public/*`, so the demo's origin doesn't need allow-listing.
+
+> Vite inlines `VITE_*` vars at build time, so build with the staging `.env`
+> (or CI env) in place — they are not read at runtime.
