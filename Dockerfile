@@ -13,5 +13,5 @@ RUN npm i -g serve
 COPY --from=build /usr/src/app/dist ./dist
 COPY --from=build /usr/src/app/node_modules ./node_modules
 COPY --from=build /usr/src/app/.env ./.env
-EXPOSE 5173
-CMD [ "serve", "-l", "5173", "-s", "dist" ]
+EXPOSE 5180
+CMD [ "serve", "-l", "5180", "-s", "dist" ]
