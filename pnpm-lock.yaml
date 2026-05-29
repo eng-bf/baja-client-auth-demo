@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       baja-client:
-        specifier: file:../baja-client
-        version: file:../baja-client
+        specifier: ^0.1.0
+        version: 0.1.0
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -433,8 +433,9 @@ packages:
     peerDependencies:
       vite: ^4.2.0 || ^5.0.0 || ^6.0.0 || ^7.0.0
 
-  baja-client@file:../baja-client:
-    resolution: {directory: ../baja-client, type: directory}
+  baja-client@0.1.0:
+    resolution: {integrity: sha512-vByLzcIz1NztsJ+MitIRomQquTExh8HK1IGoaww+SMfHmCRiVGlOHJW0kP9EfuV2NKsNJy1KmR+mBy4+3Xet8A==}
+    engines: {node: '>=18'}
 
   baseline-browser-mapping@2.10.32:
     resolution: {integrity: sha512-wbPvpyjJPC0zdfdKXxqEL3Ea+bOMD/87X4lftiJkkaBiuG6ALQy1SLmEd7BSmVCuwCQsBrCamgBoLyfFDD1EPg==}
@@ -923,7 +924,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  baja-client@file:../baja-client: {}
+  baja-client@0.1.0: {}
 
   baseline-browser-mapping@2.10.32: {}
 
