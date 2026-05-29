@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 # ---- Build stage: compile the Vite SPA into static assets ----
-FROM node:20-alpine AS build
+FROM node:22-alpine AS build
 WORKDIR /app
 
 # pnpm via corepack (repo uses pnpm-lock.yaml).
