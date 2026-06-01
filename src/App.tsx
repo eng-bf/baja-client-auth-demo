@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import type { BajaClient } from "baja-client";
 import { baja, isConfigured } from "./baja";
 import { useAuth } from "./useAuth";
+import { Playground } from "./Playground";
 
 /** Shown until VITE_CLIENT_ID is set in .env. */
 function ConfigNeeded() {
@@ -58,63 +59,21 @@ function Callback({ client }: { client: BajaClient }) {
 
 function Home({ client }: { client: BajaClient }) {
   const { authenticated, user, error, login, logout } = useAuth(client);
-  const [output, setOutput] = useState<string>("");
-  const [busy, setBusy] = useState(false);
 
-  const run = async (fn: () => Promise<unknown>) => {
-    setBusy(true);
-    try {
-      const result = await fn();
-      setOutput(
-        typeof result === "string" ? result : JSON.stringify(result, null, 2),
-      );
-    } catch (e) {
-      setOutput(`Error: ${e instanceof Error ? e.message : String(e)}`);
-    } finally {
-      setBusy(false);
-    }
-  };
+  if (!authenticated) {
+    return (
+      <main className="card">
+        <h1>Baja Client — Auth Demo</h1>
+        <p className="muted">You're not signed in.</p>
+        <button className="primary" onClick={() => void login()}>
+          Sign in with Baja
+        </button>
+        {error && <p className="error">{error}</p>}
+      </main>
+    );
+  }
 
-  return (
-    <main className="card">
-      <h1>Baja Client — Auth Demo</h1>
-
-      {!authenticated ? (
-        <>
-          <p className="muted">You're not signed in.</p>
-          <button className="primary" onClick={() => void login()}>
-            Sign in with Baja
-          </button>
-        </>
-      ) : (
-        <>
-          <p>
-            Signed in{user?.name ? ` as ${user.name}` : ""}.{" "}
-            <button className="link" onClick={logout}>
-              Log out
-            </button>
-          </p>
-          <div className="row">
-            <button disabled={busy} onClick={() => run(() => client.whoami())}>
-              whoami()
-            </button>
-            <button disabled={busy} onClick={() => run(() => client.ping())}>
-              ping()
-            </button>
-            <button
-              disabled={busy}
-              onClick={() => run(() => client.getAccessToken())}
-            >
-              getAccessToken()
-            </button>
-          </div>
-          {output && <pre>{output}</pre>}
-        </>
-      )}
-
-      {error && <p className="error">{error}</p>}
-    </main>
-  );
+  return <Playground client={client} user={user} onLogout={logout} />;
 }
 
 export default function App() {

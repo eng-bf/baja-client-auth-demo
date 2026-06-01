@@ -26,22 +26,27 @@ developers.
    pnpm dev                        # http://localhost:5180
    ```
 
-> The SDK is consumed via `file:../baja-client`, so build it once (or run
-> `pnpm -C ../baja-client dev` to rebuild on change).
+> The demo installs `baja-client` from the registry (`^0.4.0`). For local SDK
+> development, swap that dependency to `file:../baja-client` and rebuild it.
 
 ## What it shows
 
 - **Sign in with Baja** → redirects to the BF login + consent screens, then back
   to `/callback`, which exchanges the code for tokens.
-- Once signed in: call `whoami()`, `ping()`, and `getAccessToken()` and see the
-  results. Tokens are refreshed transparently; **Log out** clears the session.
+- Once signed in, the **API Playground** lets you exercise every public endpoint
+  with real controls — date pickers, plant/employee/id inputs, a type selector,
+  and a live-board cursor — each rendering the raw JSON response (and errors).
+  Covers `whoami`/`ping`, `checkIn.report`, `checkIn.nameHistory`, and
+  `checkIn.live` (full snapshot + delta refresh). Tokens refresh transparently;
+  **Log out** clears the session.
 
 ## How it's wired
 
 - `src/baja.ts` — the single `BajaClient` instance, configured from `.env`.
 - `src/useAuth.ts` — a tiny React hook mirroring the SDK's auth state (the SDK
   itself is framework-agnostic).
-- `src/App.tsx` — home screen + the `/callback` handler.
+- `src/App.tsx` — routing (sign-in / `/callback` / playground).
+- `src/Playground.tsx` — the authenticated API playground (forms + JSON output).
 
 ## Consuming the published SDK (staging / production)
 
