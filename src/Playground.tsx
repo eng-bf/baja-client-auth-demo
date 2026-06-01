@@ -69,17 +69,21 @@ export function Playground({
   const nameHistory = useCall();
   const live = useCall();
 
+  // Defaults are real values from the check_in_app DB (plant 4 "Shiraz",
+  // America/Tijuana) so every call returns populated data on the first click.
+  // The 3-day window is recent and dense (~90 movements across all employees);
+  // leave Employee # blank for the full report or filter to e.g. 21275.
   const [reportForm, setReportForm] = useState({
-    from: "2026-05-10",
-    to: "2026-05-17",
-    plantId: "1",
+    from: "2026-05-29",
+    to: "2026-05-31",
+    plantId: "4",
     employeeNumber: "",
   });
   const [nhForm, setNhForm] = useState<{
     type: "area" | "activity";
     id: string;
-  }>({ type: "area", id: "5" });
-  const [livePlantId, setLivePlantId] = useState("1");
+  }>({ type: "area", id: "11" });
+  const [livePlantId, setLivePlantId] = useState("4");
   const [liveCursor, setLiveCursor] = useState<string | null>(null);
 
   const reportValid =
@@ -160,7 +164,7 @@ export function Playground({
             Employee # (optional)
             <input
               type="text"
-              placeholder="e.g. 100245"
+              placeholder="e.g. 21275 (blank = all employees)"
               value={reportForm.employeeNumber}
               onChange={(e) =>
                 setReportForm({ ...reportForm, employeeNumber: e.target.value })
